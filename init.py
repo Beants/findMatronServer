@@ -71,11 +71,144 @@ def upload():
 
 
 @app.route('/getImage/<string:name>', methods=['GET'])
-def getImage(name):
+def get_image(name):
     print(name)
     if request.method == "GET":
         return send_from_directory('static/', name, as_attachment=True)
 
 
+@app.route('/verify_auth_token', methods=['POST'])
+def verify_auth_token():
+    if request.method == "POST":
+        token = request.form['token']
+        id_ = sqlManager.verify_auth_token(token)
+        return Response(json.dumps({
+            "code": 0,
+            "msg": '',
+            "data": {
+                "id": str(id_)
+            }
+
+        }), mimetype='application/json')
+
+
+@app.route('/newOrder', methods=['POST'])
+def newOrder():
+    if request.method == "POST":
+        from_ = request.form['from']
+        to = request.form['to']
+        dayCount = request.form['dayCount']
+        babyCount = request.form['babyCount']
+        contactName = request.form['contactName']
+        contactPhone = request.form['contactPhone']
+        contactAddress = request.form['contactAddress']
+        extraInfo = request.form['extraInfo']
+        price = request.form['price']
+        # status = request.form['status']
+        # grade = request.form['grade']
+
+        temp = sqlManager.newOrder(from_, to, dayCount, babyCount, contactName, contactPhone, contactAddress, extraInfo,
+                                   price)
+        return Response(json.dumps(temp), mimetype='application/json')
+
+
+@app.route('/getOrder', methods=['POST'])
+def getOrder():
+    if request.method == "POST":
+        page = request.form['extraInfo']
+        pageSize = request.form['price']
+        temp = sqlManager.getOrder(page, pageSize)
+        return Response(json.dumps(temp), mimetype='application/json')
+
+
+@app.route('/changeOrder', methods=['POST'])
+def changeOrder():
+    '''
+    这里的 json 参数必须是以json格式的
+    例如:
+    post 的数据如下:
+    {
+        'orderId':'5ceb676e315206fd0f2ac662',
+        'json':{
+            'price':10000,
+        }
+    }
+    :return:
+    '''
+    if request.method == "POST":
+        orderId = request.form['orderId']
+        json_ = request.form['json']
+        temp = sqlManager.changeOrder(orderId, json_)
+        return Response(json.dumps(temp), mimetype='application/json')
+
+
+@app.route('/getBsList', methods=['POST'])
+def getBsList():
+    '''
+    :param page:
+    :param pageSize:
+    :return:
+    {
+        'code': 0,
+        'msg': '',
+        'data': {
+            'list': [{
+                '_id': '5ceb677d288634f85fada361',
+                'from': '2019-05-27',
+                'to': '2019-06-27',
+                'dayCount': '30',
+                'babyCount': '2',
+                'contactName': 'name',
+                'contactPhone': '13000000000',
+                'contactAddress': '北京',
+                'extraInfo': 'note',
+                'price': 10000,
+                'status': 1,
+                'grade': ''
+            }]
+        }
+    }
+    '''
+    if request.method == "POST":
+        page = request.form['page']
+        pageSize = request.form['pageSize']
+        temp = sqlManager.getBsList(page, pageSize)
+        return Response(json.dumps(temp), mimetype='application/json')
+
+
+@app.route('/getBsDetail', methods=['POST'])
+def getBsDetail():
+    '''
+
+    :return:
+    {
+            "code": 0,
+            "msg": "注册成功",
+            "data": {
+                "familyCount": temp["familyCount"],
+                'Introduction': temp['Introduction'],
+                'grade': temp['grade'],
+                "verify": {
+                    "idcard": {
+                        "name": temp['name'],
+                        "number": temp['idcard']
+                    },
+                    "health": {
+                        "img": temp['healthCard'],
+                    },
+                    "perfessionCard": {
+                        'img': 'timg.jpeg',
+                    }
+                },
+            }
+        }
+    '''
+    if request.method == "POST":
+        id_ = request.form['id']
+        temp = sqlManager.getBsDetail(id_)
+        return Response(json.dumps(temp), mimetype='application/json')
+
+
+
 if __name__ == '__main__':
-    app.run('0.0.0.0')
+    app.run('0.0.0.0', port='3567')

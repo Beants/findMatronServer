@@ -95,7 +95,7 @@ class SqlManager:
             }
 
     def newOrder(self, time_from, time_to, dayCount, babyCount, contactName, contactPhone, contactAddress,
-                 extraInfo):
+                 extraInfo, price):
         table = self.mydb['order']
         temp = table.insert_one(
             {
@@ -107,7 +107,7 @@ class SqlManager:
                 "contactPhone": contactPhone,
                 "contactAddress": contactAddress,
                 "extraInfo": extraInfo,
-                "price": 0,
+                "price": price,
                 "status": 1,
                 "grade": '',
             }
@@ -128,34 +128,7 @@ class SqlManager:
             }
 
     def getOrder(self, page, pageSize):
-        '''
 
-        :param page:
-        :param pageSize:
-        :return:
-        {
-            'code': 0,
-            'msg': '',
-            'data': {
-                'list': [{
-                    '_id': '5ceb677d288634f85fada361',
-                    'from': '2019-05-27',
-                    'to': '2019-06-27',
-                    'dayCount': '30',
-                    'babyCount': '2',
-                    'contactName': 'name',
-                    'contactPhone': '13000000000',
-                    'contactAddress': '北京',
-                    'extraInfo': 'note',
-                    'price': 10000,
-                    'status': 1,
-                    'grade': ''
-                }]
-           }
-}
-
-
-        '''
         table = self.mydb['order']
         res = []
         for i in table.find({}):
@@ -209,33 +182,7 @@ class SqlManager:
         table.insert_one(temp)
 
     def getBsList(self, page, pageSize):
-        '''
 
-        :param page:
-        :param pageSize:
-        :return:
-        {
-            'code': 0,
-            'msg': '注册成功',
-            'data': {
-                'list': [{
-                    '_id': '5ceb967d676262e425368109',
-                    'imageUrl': 'zhengjianzhao.jpeg',
-                    'name': '赵 a',
-                    'age': '33',
-                    'duration': '2018-1-1',
-                    'grade': '99',
-                    'price': '100/天',
-                    'city': '北京',
-                    'familyCount': '10',
-                    'idcard': '123456789012345678',
-                    'healthCard': '1558939237856.jpg',
-                    'perfessionCard': 'timg.jpeg',
-                    'Introduction': '我热爱生活,积极工作,爱岗敬业,无私奉献,获得一致好评!'
-                }]
-            }
-        }
-        '''
         table = self.mydb['bs']
         res = []
         for i in table.find({}):
