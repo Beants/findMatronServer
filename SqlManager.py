@@ -5,7 +5,7 @@
 # @Site : 
 # @File : SqlManager.py
 # @Software: PyCharm
-from pymongo.objectid import ObjectId
+from bson.objectid import ObjectId
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer, SignatureExpired, BadSignature
 
 
