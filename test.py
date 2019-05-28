@@ -27,9 +27,12 @@
 #                        id, '1558939237856.jpg', 'timg.jpeg', '我热爱生活,积极工作,爱岗敬业,无私奉献,获得一致好评!')
 import requests
 
-html = requests.post('http://39.96.222.175:3567/reg', {
-    "account": "abcdefg",
-    "pwd": "123456"
+url1 = 'http://39.96.222.175:3567/login'
+url = 'http://0.0.0.0:3567/login'
+html = requests.post(url1, {
+    "account": "111111",
+    "pwd": "111111"
 })
+print(html.url)
 print(html.text)
 print(html.status_code)

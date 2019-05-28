@@ -8,7 +8,7 @@
 import json
 import os
 
-from flask import Flask, request, Response, send_from_directory
+from flask import Flask, request, Response, send_from_directory, jsonify
 
 # sys.stdout = codecs.getwriter("utf-8")(sys.stdout.detach())
 from SqlManager import SqlManager
@@ -24,14 +24,18 @@ def hello_world():
     return 'Hello, World!'
 
 
+@app.route('/reg', methods=['POST'])
 @app.route('/reg/', methods=['POST'])
 def reg():
     if request.method == "POST":
+        print(request.headers)
+        print(request.url)
+        print(request.__str__())
         username = request.form['account']
         pwd = request.form['pwd']
         print(request.form)
         temp = sqlManager.reg(username, pwd)
-        return Response(json.dumps(temp), mimetype='application/json')
+        return Response(jsonify(temp), mimetype='application/json')
 
 
 @app.route('/login/', methods=['POST'])
@@ -42,7 +46,7 @@ def login():
         username = request.form['account']
         pwd = request.form['pwd']
         temp = sqlManager.login(username, pwd)
-        return Response(json.dumps(temp), mimetype='application/json')
+        return Response(jsonify(temp), mimetype='application/json')
 
 
 @app.route('/cpwd/', methods=['POST'])
@@ -53,7 +57,7 @@ def cpwd():
         token = request.form['token']
         pwd = request.form['pwd']
         temp = sqlManager.cpwd(token, pwd)
-        return Response(json.dumps(temp), mimetype='application/json')
+        return Response(jsonify(temp), mimetype='application/json')
 
 
 @app.route('/upload/', methods=['POST'])
@@ -67,7 +71,7 @@ def upload():
         fname = str(time.time()) + f.filename
         upload_path = os.path.join(basepath, 'static/', fname)  # 注意：没有的文件夹一定要先创建，不然会提示没有该路径
         f.save(upload_path)
-        return Response(json.dumps({
+        return Response(jsonify({
             "code": 0,
             "msg": '',
             "data": {
@@ -91,7 +95,7 @@ def verify_auth_token():
 
         token = request.form['token']
         id_ = sqlManager.verify_auth_token(token)
-        return Response(json.dumps({
+        return Response(jsonify({
             "code": 0,
             "msg": '',
             "data": {
@@ -120,7 +124,7 @@ def newOrder():
 
         temp = sqlManager.newOrder(from_, to, dayCount, babyCount, contactName, contactPhone, contactAddress, extraInfo,
                                    price)
-        return Response(json.dumps(temp), mimetype='application/json')
+        return Response(jsonify(temp), mimetype='application/json')
 
 
 @app.route('/getOrder', methods=['POST'])
@@ -131,7 +135,7 @@ def getOrder():
         page = request.form['extraInfo']
         pageSize = request.form['price']
         temp = sqlManager.getOrder(page, pageSize)
-        return Response(json.dumps(temp), mimetype='application/json')
+        return Response(jsonify(temp), mimetype='application/json')
 
 
 @app.route('/changeOrder', methods=['POST'])
@@ -154,7 +158,7 @@ def changeOrder():
         orderId = request.form['orderId']
         json_ = request.form['json']
         temp = sqlManager.changeOrder(orderId, json_)
-        return Response(json.dumps(temp), mimetype='application/json')
+        return Response(jsonify(temp), mimetype='application/json')
 
 
 @app.route('/getBsList', methods=['POST'])
@@ -190,7 +194,7 @@ def getBsList():
 
         pageSize = request.form['pageSize']
         temp = sqlManager.getBsList(page, pageSize)
-        return Response(json.dumps(temp), mimetype='application/json')
+        return Response(jsonify(temp), mimetype='application/json')
 
 
 @app.route('/getBsDetail', methods=['POST'])
@@ -225,7 +229,7 @@ def getBsDetail():
 
         id_ = request.form['id']
         temp = sqlManager.getBsDetail(id_)
-        return Response(json.dumps(temp), mimetype='application/json')
+        return Response(jsonify(temp), mimetype='application/json')
 
 
 
