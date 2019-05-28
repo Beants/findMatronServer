@@ -29,6 +29,7 @@ def reg():
     if request.method == "POST":
         username = request.form['account']
         pwd = request.form['pwd']
+        print(request.form)
         temp = sqlManager.reg(username, pwd)
         return Response(json.dumps(temp), mimetype='application/json')
 
@@ -36,6 +37,8 @@ def reg():
 @app.route('/login/', methods=['POST'])
 def login():
     if request.method == "POST":
+        print(request.form)
+
         username = request.form['account']
         pwd = request.form['pwd']
         temp = sqlManager.login(username, pwd)
@@ -45,6 +48,8 @@ def login():
 @app.route('/cpwd/', methods=['POST'])
 def cpwd():
     if request.method == "POST":
+        print(request.form)
+
         token = request.form['token']
         pwd = request.form['pwd']
         temp = sqlManager.cpwd(token, pwd)
@@ -54,6 +59,8 @@ def cpwd():
 @app.route('/upload/', methods=['POST'])
 def upload():
     if request.method == "POST":
+        print(request.form)
+
         import time
         f = request.files['file']
         basepath = os.path.dirname(__file__)  # 当前文件所在路径
@@ -80,6 +87,8 @@ def get_image(name):
 @app.route('/verify_auth_token', methods=['POST'])
 def verify_auth_token():
     if request.method == "POST":
+        print(request.form)
+
         token = request.form['token']
         id_ = sqlManager.verify_auth_token(token)
         return Response(json.dumps({
@@ -94,6 +103,8 @@ def verify_auth_token():
 
 @app.route('/newOrder', methods=['POST'])
 def newOrder():
+    print(request.form)
+
     if request.method == "POST":
         from_ = request.form['from']
         to = request.form['to']
@@ -114,6 +125,8 @@ def newOrder():
 
 @app.route('/getOrder', methods=['POST'])
 def getOrder():
+    print(request.form)
+
     if request.method == "POST":
         page = request.form['extraInfo']
         pageSize = request.form['price']
@@ -136,6 +149,8 @@ def changeOrder():
     :return:
     '''
     if request.method == "POST":
+        print(request.form)
+
         orderId = request.form['orderId']
         json_ = request.form['json']
         temp = sqlManager.changeOrder(orderId, json_)
@@ -171,6 +186,8 @@ def getBsList():
     '''
     if request.method == "POST":
         page = request.form['page']
+        print(request.form)
+
         pageSize = request.form['pageSize']
         temp = sqlManager.getBsList(page, pageSize)
         return Response(json.dumps(temp), mimetype='application/json')
@@ -204,6 +221,8 @@ def getBsDetail():
         }
     '''
     if request.method == "POST":
+        print(request.form)
+
         id_ = request.form['id']
         temp = sqlManager.getBsDetail(id_)
         return Response(json.dumps(temp), mimetype='application/json')

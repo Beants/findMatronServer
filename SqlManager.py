@@ -5,7 +5,7 @@
 # @Site : 
 # @File : SqlManager.py
 # @Software: PyCharm
-from bson import ObjectId
+from pymongo.objectid import ObjectId
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer, SignatureExpired, BadSignature
 
 
@@ -42,7 +42,7 @@ class SqlManager:
                 return {
                     "code": 0,
                     "msg": "注册成功",
-                    "data": {"id": str(temp)}
+                    "data": {"id": str(temp.inserted_id)}
                 }
             else:
                 return {
