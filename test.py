@@ -27,12 +27,10 @@
 #                        id, '1558939237856.jpg', 'timg.jpeg', '我热爱生活,积极工作,爱岗敬业,无私奉献,获得一致好评!')
 import requests
 
-url1 = 'http://39.96.222.175:3567/getBsList'
-url = 'http://0.0.0.0:3567/getOrder'
-html = requests.post(url, {
-    "page": "1",
-    "pageSize": "1"
-})
+url1 = 'http://39.96.222.175:3567/getImage/timg.jpeg'
+url = 'http://0.0.0.0:3567/getImage/timg.jpeg'
+html = requests.get(url1,
+                     )
 print(html.url)
 print(html.text)
 print(html.status_code)

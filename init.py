@@ -93,6 +93,16 @@ def get_image(name):
         return send_from_directory('static/', name, as_attachment=True)
 
 
+@app.route('/getImage2/<string:name>', methods=['GET'])
+def get_image2(name):
+    print(name)
+    if request.method == "GET":
+        with open('static/' + name,'rb')as f:
+            img = f.read()
+            return Response(img, mimetype="image/jpeg")
+        # return send_from_directory('static/', name, as_attachment=True)
+
+
 @app.route('/verify_auth_token/', methods=['POST'])
 def verify_auth_token():
     if request.method == "POST":
@@ -187,7 +197,23 @@ def getBsList():
                 'price': 10000,
                 'status': 1,
                 'grade': ''
-            }]
+            },
+            {
+                '_id': '5cebca48e4967cff06320f50',
+                'imageUrl': 'zhengjianzhao.jpeg',
+                'name': '彭万里',
+                'age': '33',
+                'duration': '2018-1-1',
+                'grade': '72',
+                'price': '385/天',
+                'city': '北京',
+                'familyCount': '51',
+                'idcard': '377632393017458497',
+                'healthCard': '1558939237856.jpg',
+                'perfessionCard': 'timg.jpeg',
+                'Introduction': '我热爱生活,积极工作,爱岗敬业,无私奉献,获得一致好评!'
+            }
+            ]
         }
     }
     '''
