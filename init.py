@@ -263,19 +263,12 @@ def getBsList():
         page = int(request.form['page'])
         pageSize = int(request.form['pageSize'])
         sort = int(request.form['sort'])
-        temp = sqlManager.getBsList(page, pageSize)
+        temp = sqlManager.getBsList(page, pageSize, sort)
 
         data = temp['data']['list']
         print(data)
 
-        if sort == 0:
-            temp = temp
-        elif sort == 1:
-            data.sort(key=lambda k: int(str(k['price']).replace('/天', '')),reverse=True)
-            temp['data']['list'] = data
-        elif sort == 2:
-            data.sort(key=lambda k: int(k['grade']),reverse=True)
-            temp['data']['list'] = data
+
         return Response(json.dumps(temp, cls=MyEncoder), mimetype='application/json')
 
 

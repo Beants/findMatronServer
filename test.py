@@ -30,9 +30,9 @@ import requests
 url1 = 'http://39.96.222.175:3567/getImage/timg.jpeg'
 url = 'http://0.0.0.0:3567/getBsList/'
 html = requests.post(url, {
-    'page': 0,
-    "pageSize": 100,
-    "sort": 2
+    'page': 1,
+    "pageSize": 5,
+    "sort": 1
 }
                     )
 print(html.url)

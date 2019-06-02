@@ -198,13 +198,20 @@ class SqlManager:
         print(temp)
         table.insert_one(temp)
 
-    def getBsList(self, page, pageSize):
+    def getBsList(self, page, pageSize, sort):
 
         table = self.mydb['bs']
         res = []
         for i in table.find({}):
             i['_id'] = str(i['_id']).replace('ObjectId(', '').replace(')', '')
             res.append(i)
+
+        if sort == 0:
+            res = res
+        elif sort == 1:
+            res.sort(key=lambda k: int(str(k['price']).replace('/天', '')), reverse=True)
+        elif sort == 2:
+            res.sort(key=lambda k: int(k['grade']), reverse=True)
         res = res[page * pageSize:(page + 1) * pageSize]
         print(res.__len__())
 
