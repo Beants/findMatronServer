@@ -206,7 +206,7 @@ class SqlManager:
             i['_id'] = str(i['_id']).replace('ObjectId(', '').replace(')', '')
             res.append(i)
         res = res[page * pageSize:(page + 1) * pageSize]
-        print(res)
+        print(res.__len__())
 
         return {
             "code": 0,
