@@ -145,6 +145,23 @@ class SqlManager:
             }
         }
 
+    def getOrderById(self, page, pageSize, id_):
+        table = self.mydb['order']
+        res = []
+        for i in table.find({'_id': id_}):
+            i['_id'] = str(i['_id']).replace('ObjectId(', '').replace(')', '')
+            res.append(i)
+        res = res[page * pageSize:(page + 1) * pageSize]
+        print(page * pageSize, 'ss', (page + 1) * pageSize)
+        print(res)
+        return {
+            "code": 0,
+            "msg": "",
+            "data": {
+                "list": res
+            }
+        }
+
     def changeOrder(self, orderId, json):
         table = self.mydb['order']
         temp = table.update_one({"_id": ObjectId(orderId)}, {'$set': json})

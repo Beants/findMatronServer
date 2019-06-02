@@ -33,6 +33,10 @@ def hello_world():
 @app.route('/reg', methods=['POST'])
 @app.route('/reg/', methods=['POST'])
 def reg():
+    '''
+    注册
+    :return:
+    '''
     if request.method == "POST":
         print(request.headers)
         print(request.url)
@@ -45,6 +49,10 @@ def reg():
 
 @app.route('/login/', methods=['POST'])
 def login():
+    '''
+    登录
+    :return:
+    '''
     if request.method == "POST":
         print(request.form)
 
@@ -56,6 +64,10 @@ def login():
 
 @app.route('/cpwd/', methods=['POST'])
 def cpwd():
+    '''
+    change pwd
+    :return:
+    '''
     if request.method == "POST":
         print(request.form)
 
@@ -67,6 +79,10 @@ def cpwd():
 
 @app.route('/upload/', methods=['POST'])
 def upload():
+    '''
+    上传文件
+    :return:
+    '''
     if request.method == "POST":
         print(request.form)
 
@@ -88,6 +104,11 @@ def upload():
 
 @app.route('/getImage/<string:name>', methods=['GET'])
 def get_image(name):
+    '''
+    下载图片
+    :param name:
+    :return:
+    '''
     print(name)
     if request.method == "GET":
         return send_from_directory('static/', name, as_attachment=True)
@@ -95,6 +116,11 @@ def get_image(name):
 
 @app.route('/getImage2/<string:name>', methods=['GET'])
 def get_image2(name):
+    '''
+    直接打开图片
+    :param name:
+    :return:
+    '''
     print(name)
     if request.method == "GET":
         with open('static/' + name,'rb')as f:
@@ -105,6 +131,10 @@ def get_image2(name):
 
 @app.route('/verify_auth_token/', methods=['POST'])
 def verify_auth_token():
+    '''
+    确认token
+    :return:
+    '''
     if request.method == "POST":
         print(request.form)
 
@@ -122,6 +152,10 @@ def verify_auth_token():
 
 @app.route('/newOrder/', methods=['POST'])
 def newOrder():
+    '''
+    新订单
+    :return:
+    '''
     print(request.form)
     if request.method == "POST":
         from_ = request.form['from']
@@ -143,12 +177,32 @@ def newOrder():
 
 @app.route('/getOrder/', methods=['POST'])
 def getOrder():
+    '''
+    获取order
+    '''
     print(request.form)
 
     if request.method == "POST":
         page = int(request.form['page'])
         pageSize = int(request.form['pageSize'])
+
         temp = sqlManager.getOrder(page, pageSize)
+        return Response(json.dumps(temp, cls=MyEncoder), mimetype='application/json')
+
+
+@app.route('/getOrderById/', methods=['POST'])
+def getOrderById():
+    '''
+    获取该用户的 order
+    '''
+    print(request.form)
+
+    if request.method == "POST":
+        page = int(request.form['page'])
+        pageSize = int(request.form['pageSize'])
+        token = request.form['token']
+        id_ = sqlManager.verify_auth_token(token)
+        temp = sqlManager.getOrderById(page, pageSize, id_)
         return Response(json.dumps(temp, cls=MyEncoder), mimetype='application/json')
 
 
@@ -177,28 +231,16 @@ def changeOrder():
 @app.route('/getBsList/', methods=['POST'])
 def getBsList():
     '''
+    :param sort 0:综合 1:价格 2:评分
     :param page:
     :param pageSize:
     :return:
     {
         'code': 0,
         'msg': '',
-        'data': {
-            'list': [{
-                '_id': '5ceb677d288634f85fada361',
-                'from': '2019-05-27',
-                'to': '2019-06-27',
-                'dayCount': '30',
-                'babyCount': '2',
-                'contactName': 'name',
-                'contactPhone': '13000000000',
-                'contactAddress': '北京',
-                'extraInfo': 'note',
-                'price': 10000,
-                'status': 1,
-                'grade': ''
-            },
-            {
+        'data':
+            [
+                {
                 '_id': '5cebca48e4967cff06320f50',
                 'imageUrl': 'zhengjianzhao.jpeg',
                 'name': '彭万里',
@@ -212,18 +254,22 @@ def getBsList():
                 'healthCard': '1558939237856.jpg',
                 'perfessionCard': 'timg.jpeg',
                 'Introduction': '我热爱生活,积极工作,爱岗敬业,无私奉献,获得一致好评!'
-            }
+                },
             ]
         }
     }
     '''
     if request.method == "POST":
         page = int(request.form['page'])
-        print(request.form)
-
         pageSize = int(request.form['pageSize'])
-
+        sort = int(request.form['sort'])
         temp = sqlManager.getBsList(page, pageSize)
+        if sort == 0:
+            temp = temp
+        elif sort == 1:
+            temp = sorted(temp, key=lambda i: int(str(i['price']).replace('/天', '')))
+        elif sort == 2:
+            temp = sorted(temp, key=lambda i: int(i['grade']))
         return Response(json.dumps(temp, cls=MyEncoder), mimetype='application/json')
 
 
